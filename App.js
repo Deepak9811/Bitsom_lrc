@@ -47,6 +47,8 @@ export default class App extends Component {
     // SplashScreen.hide();
   }
 
+  //change by dk
+
   render() {
     return (
       <SafeAreaProvider>
