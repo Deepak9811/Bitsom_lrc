@@ -12,6 +12,9 @@ import {
   Linking,
   BackHandler,
   StatusBar,
+  Keyboard,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 import {Appbar} from 'react-native-paper';
@@ -59,6 +62,15 @@ export default class About extends Component {
     } catch (error) {
       console.log('There has problem in AsyncStorage : ' + error.message);
     }
+
+    // this.keyboardDidShowListener = Keyboard.addListener(
+    //   'keyboardDidShow',
+    //   this._keyboardDidShow,
+    // );
+    // this.keyboardDidHideListener = Keyboard.addListener(
+    //   'keyboardDidHide',
+    //   this._keyboardDidHide,
+    // );
   }
 
   componentWillUnmount() {
@@ -68,7 +80,18 @@ export default class About extends Component {
         animation: false,
       }),
     );
+
+    // this.keyboardDidShowListener.remove();
+    // this.keyboardDidHideListener.remove();
   }
+
+  // _keyboardDidShow = () => {
+  //   //scrollView.scrollToEnd({animated:true})
+  //   // scrollView.scrollTo({y: 620, animated: true});
+  // };
+
+  // _keyboardDidHide = () => {
+  // };
 
   checkCatalog() {
     if (this.state.bookType === '') {
@@ -204,12 +227,12 @@ export default class About extends Component {
 
     // , () => {
     console.log(
-      "purpose data :---",
+      'purpose data :---',
       this.state.bookType,
       value,
       index,
       this.state.disble,
-      this.state.indexOfSelection
+      this.state.indexOfSelection,
     );
     // }
 
@@ -236,205 +259,216 @@ export default class About extends Component {
           </View>
         )}
 
-        <ScrollView showsVerticalScrollIndicator={false}>
-          <View style={{margin: 10, marginLeft: '5%', marginRight: '5%'}}>
-            {/* ===============INFO======================= */}
-            <View style={styles.uDetail}>
-              <Text style={styles.uNme}>Hello</Text>
-              <Text style={styles.uNme}>{this.state.name}</Text>
-              {/* <Text style={{marginTop: 10, color: '#8A8A8A'}}>
+        <KeyboardAvoidingView
+          style={{flex: 1}}
+          behavior={Platform.OS === 'ios' ? 'padding' : ''}>
+          <ScrollView
+            ref={ref => (scrollView = ref)}
+            showsVerticalScrollIndicator={false}>
+            <View style={{margin: 10, marginLeft: '5%', marginRight: '5%'}}>
+              {/* ===============INFO======================= */}
+              <View style={styles.uDetail}>
+                <Text style={styles.uNme}>Hello</Text>
+                <Text style={styles.uNme}>{this.state.name}</Text>
+                {/* <Text style={{marginTop: 10, color: '#8A8A8A'}}>
                 Welcome to Learning Resource Center, BITSoM
               </Text> */}
-              <RenderHtml
-                contentWidth={{width: 100}}
-                source={{
-                  html: `${this.props.route.params.opacData}`,
-                }}
-              />
-            </View>
-
-            <Text style={{marginTop: 10, color: '#8A8A8A'}}>
-              Use the following form to search your library catalog.
-            </Text>
-
-            <View style={styles.pkr}>
-            <SelectPicker
-                style={{ width: "100%" }}
-                selectedValue={this.state.purposeIndexValue}
-                onValueChange={(value, index) => {
-                  this.onPickerValue(value, index);
-                }}
-              >
-                <SelectPicker.item
-                  label="Search Criteria"
-                  color="#6f6f6f"
-                  value="0"
-                  style={{ display: this.state.disble ? "flex" : "none" }}
-                  enabled={this.state.disble ? false : true}
+                <RenderHtml
+                  contentWidth={{width: 100}}
+                  source={{
+                    html: `${this.props.route.params.opacData}`,
+                  }}
                 />
+              </View>
 
-                {this.state.purposeData.map((item, i) => (
-                  <SelectPicker.item
-                    label={item.type}
-                    color="#000"
-                    value={item.id}
-                  />
-                ))}
-              </SelectPicker>
-            </View>
+              <Text style={{marginTop: 10, color: '#8A8A8A'}}>
+                Use the following form to search your library catalog.
+              </Text>
 
-            <View style={styles.searchSt}>
-              <TextInput
-                placeholder="Search..."
-                style={styles.searchInputStyle}
-                placeholderTextColor={'#7F7F7F'}
-                value={this.state.searchMeeting}
-                onChangeText={value => {
-                  this.setState({searchMeeting: value});
-                }}
-              />
-            </View>
-
-            <View style={{marginTop: '5%'}}>
-              <TouchableOpacity
-                onPress={value => this.checkCatalog(value)}
-                disabled={this.state.searchLoader ? true : false}>
-                <LinearGradient
-                  colors={['#f68823', '#b03024']}
-                  style={styles.signIn}>
-                  {this.state.searchLoader ? (
-                    <ActivityIndicator size="large" color="#fff" />
-                  ) : (
-                    <Text style={styles.textSign}>Search</Text>
-                  )}
-                </LinearGradient>
-              </TouchableOpacity>
-            </View>
-
-            {this.state.showSearchContent ? (
-              <LinearGradient colors={['#fff', '#fff']} style={styles.dropdown}>
-                <Text
-                  style={
-                    (styles.dropdown, {color: '#8A8A8A', marginBottom: 15})
-                  }>
-                  Following is the list of titles we found based on your search
-                  criteria. You can click on individual title for a detailed
-                  view.
-                </Text>
-
-                <View
-                  style={{
-                    paddingTop: '5%',
-                    width: '100%',
-                    backgroundColor: '#eff7ee',
-                    paddingLeft: '3%',
-                    paddingRight: '3%',
+              <View style={styles.pkr}>
+                <SelectPicker
+                  style={{width: '100%'}}
+                  selectedValue={this.state.purposeIndexValue}
+                  onValueChange={(value, index) => {
+                    this.onPickerValue(value, index);
                   }}>
-                  <View style={styles.flatstyles}>
-                    <ScrollView showsVerticalScrollIndicator={false}>
-                      <View
-                        style={{
-                          marginTop: '1%',
-                          marginBottom: '5%',
-                          width: '100%',
-                        }}>
-                        {this.state.listArray.map((item, i) => {
-                          {
-                            if (item[2] === null) {
-                              this.state.showitem = false;
-                            } else {
-                              this.state.showitem = true;
+                  <SelectPicker.item
+                    label="Search Criteria"
+                    color="#6f6f6f"
+                    value="0"
+                    style={{display: this.state.disble ? 'flex' : 'none'}}
+                    enabled={this.state.disble ? false : true}
+                  />
+
+                  {this.state.purposeData.map((item, i) => (
+                    <SelectPicker.item
+                      label={item.type}
+                      color="#000"
+                      value={item.id}
+                    />
+                  ))}
+                </SelectPicker>
+              </View>
+
+              <View style={styles.searchSt}>
+                <TextInput
+                  placeholder="Search..."
+                  style={styles.searchInputStyle}
+                  placeholderTextColor={'#7F7F7F'}
+                  value={this.state.searchMeeting}
+                  onChangeText={value => {
+                    this.setState({searchMeeting: value});
+                  }}
+                />
+              </View>
+
+              <View style={{marginTop: '5%'}}>
+                <TouchableOpacity
+                  onPress={value => this.checkCatalog(value)}
+                  disabled={this.state.searchLoader ? true : false}>
+                  <LinearGradient
+                    colors={['#f68823', '#b03024']}
+                    style={styles.signIn}>
+                    {this.state.searchLoader ? (
+                      <ActivityIndicator size="large" color="#fff" />
+                    ) : (
+                      <Text style={styles.textSign}>Search</Text>
+                    )}
+                  </LinearGradient>
+                </TouchableOpacity>
+              </View>
+
+              {this.state.showSearchContent ? (
+                <LinearGradient
+                  colors={['#fff', '#fff']}
+                  style={styles.dropdown}>
+                  <Text
+                    style={
+                      (styles.dropdown, {color: '#8A8A8A', marginBottom: 15})
+                    }>
+                    Following is the list of titles we found based on your
+                    search criteria. You can click on individual title for a
+                    detailed view.
+                  </Text>
+
+                  <View
+                    style={{
+                      paddingTop: '5%',
+                      width: '100%',
+                      backgroundColor: '#eff7ee',
+                      paddingLeft: '3%',
+                      paddingRight: '3%',
+                    }}>
+                    <View style={styles.flatstyles}>
+                      <ScrollView showsVerticalScrollIndicator={false}>
+                        <View
+                          style={{
+                            marginTop: '1%',
+                            marginBottom: '5%',
+                            width: '100%',
+                          }}>
+                          {this.state.listArray.map((item, i) => {
+                            {
+                              if (item[2] === null) {
+                                this.state.showitem = false;
+                              } else {
+                                this.state.showitem = true;
+                              }
                             }
-                          }
-                          return (
-                            <React.Fragment key={i}>
-                              <TouchableOpacity
-                                style={styles.commonGradient}
-                                value={this.state.mName}
-                                onPress={() => this.getTextValue(item)}>
-                                <View
-                                  style={{
-                                    borderRadius: 10,
-                                  }}>
-                                  <LinearGradient
-                                    colors={['#fff', '#fff']}
+                            return (
+                              <React.Fragment key={i}>
+                                <TouchableOpacity
+                                  style={styles.commonGradient}
+                                  value={this.state.mName}
+                                  onPress={() => this.getTextValue(item)}>
+                                  <View
                                     style={{
                                       borderRadius: 10,
-                                      paddingBottom: 10,
                                     }}>
-                                    <View
+                                    <LinearGradient
+                                      colors={['#fff', '#fff']}
                                       style={{
-                                        paddingLeft: 15,
-                                        paddingRight: 5,
-                                        paddingTop: 10,
                                         borderRadius: 10,
+                                        paddingBottom: 10,
                                       }}>
-                                      <Text style={styles.bookTitle}>
-                                        {item[1]}
-                                      </Text>
-
-                                      <Text
+                                      <View
                                         style={{
-                                          display: this.state.showitem
-                                            ? 'flex'
-                                            : 'none',
+                                          paddingLeft: 15,
+                                          paddingRight: 5,
+                                          paddingTop: 10,
+                                          borderRadius: 10,
                                         }}>
-                                        {item[2]}
-                                      </Text>
-                                    </View>
-
-                                    <View
-                                      style={[
-                                        styles.oldBookStyle,
-                                        {marginTop: 10},
-                                      ]}>
-                                      <Text
-                                        style={styles.currentIssuesDetailsMap}>
-                                        By :{' '}
-                                        <Text style={styles.bookAuther}>
-                                          {item[3]}
+                                        <Text style={styles.bookTitle}>
+                                          {item[1]}
                                         </Text>
-                                      </Text>
-                                    </View>
 
-                                    <View style={styles.oldBookStyle}>
-                                      <Text
-                                        style={styles.currentIssuesDetailsMap}>
-                                        Publisher :{' '}
                                         <Text
                                           style={{
-                                            width: '60%',
-                                            marginTop: 5,
+                                            display: this.state.showitem
+                                              ? 'flex'
+                                              : 'none',
                                           }}>
-                                          {item[4]}
+                                          {item[2]}
                                         </Text>
-                                      </Text>
-                                    </View>
-                                  </LinearGradient>
-                                </View>
-                              </TouchableOpacity>
-                            </React.Fragment>
-                          );
-                        })}
-                      </View>
-                    </ScrollView>
+                                      </View>
+
+                                      <View
+                                        style={[
+                                          styles.oldBookStyle,
+                                          {marginTop: 10},
+                                        ]}>
+                                        <Text
+                                          style={
+                                            styles.currentIssuesDetailsMap
+                                          }>
+                                          By :{' '}
+                                          <Text style={styles.bookAuther}>
+                                            {item[3]}
+                                          </Text>
+                                        </Text>
+                                      </View>
+
+                                      <View style={styles.oldBookStyle}>
+                                        <Text
+                                          style={
+                                            styles.currentIssuesDetailsMap
+                                          }>
+                                          Publisher :{' '}
+                                          <Text
+                                            style={{
+                                              width: '60%',
+                                              marginTop: 5,
+                                            }}>
+                                            {item[4]}
+                                          </Text>
+                                        </Text>
+                                      </View>
+                                    </LinearGradient>
+                                  </View>
+                                </TouchableOpacity>
+                              </React.Fragment>
+                            );
+                          })}
+                        </View>
+                      </ScrollView>
+                    </View>
                   </View>
-                </View>
-              </LinearGradient>
-            ) : (
-              <>
-                <View
-                  style={{
-                    justifyContent: 'center',
-                    alignItems: 'center',
-                    marginTop: '10%',
-                  }}>
-                  <Text>{this.state.message}</Text>
-                </View>
-              </>
-            )}
-          </View>
-        </ScrollView>
+                </LinearGradient>
+              ) : (
+                <>
+                  <View
+                    style={{
+                      justifyContent: 'center',
+                      alignItems: 'center',
+                      marginTop: '10%',
+                    }}>
+                    <Text>{this.state.message}</Text>
+                  </View>
+                </>
+              )}
+            </View>
+          </ScrollView>
+        </KeyboardAvoidingView>
 
         <View
           style={{

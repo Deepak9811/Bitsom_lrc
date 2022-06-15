@@ -8,6 +8,8 @@ import {
   Linking,
   ScrollView,
   Alert,
+  KeyboardAvoidingView,
+  Platform,
 } from 'react-native';
 
 import {Appbar} from 'react-native-paper';
@@ -108,6 +110,7 @@ const Contact = ({props,navigation}) => {
       });
     }
   };
+  
 
   return (
     <SafeAreaView style={styles.container}>
@@ -121,7 +124,9 @@ const Contact = ({props,navigation}) => {
       </Appbar.Header>
 
       <>
-        <ScrollView
+      <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' :''}>
+       <ScrollView
+          ref={ref => (scrollView = ref)}
           showsVerticalScrollIndicator={false}
           contentContainerStyle={{flexGrow: 1}}>
           <View style={styles.mainContainer}>
@@ -225,6 +230,7 @@ const Contact = ({props,navigation}) => {
             )}
           </View>
         </ScrollView>
+       </KeyboardAvoidingView>
       </>
 
       <View

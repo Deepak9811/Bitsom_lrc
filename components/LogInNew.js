@@ -14,6 +14,7 @@ import {
   Alert,
   ActivityIndicator,
   Linking,
+  KeyboardAvoidingView,
 } from 'react-native';
 
 import FontAwesome from 'react-native-vector-icons/FontAwesome';
@@ -468,7 +469,8 @@ export default class LogInNew extends Component {
               style={[styles.footer,{flex:2.5}]}
               animation="fadeInUpBig"
               duration={1000}>
-              <ScrollView showsVerticalScrollIndicator={false}>
+                <KeyboardAvoidingView behavior={Platform.OS === 'ios' ? 'padding' :''}>
+                <ScrollView showsVerticalScrollIndicator={false}>
                 <View>
                   {/* --------Email-------------------- */}
 
@@ -667,6 +669,8 @@ export default class LogInNew extends Component {
                   </View>
                 </View>
               </ScrollView>
+                </KeyboardAvoidingView>
+            
             </Animatable.View>
           </View>
         ) : null}

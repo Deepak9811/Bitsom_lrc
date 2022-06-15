@@ -3,7 +3,7 @@ import React, {Component} from 'react';
 import {NavigationContainer} from '@react-navigation/native';
 import {createNativeStackNavigator} from '@react-navigation/native-stack';
 
-// import SplashScreen from 'react-native-splash-screen';
+import SplashScreen from 'react-native-splash-screen';
 import {SafeAreaProvider} from 'react-native-safe-area-context';
 
 import Home from './components/Home';
@@ -44,7 +44,7 @@ export default class App extends Component {
         routeName: 'Home',
       });
     }
-    // SplashScreen.hide();
+    SplashScreen.hide();
   }
 
   //change by dk

@@ -44,9 +44,9 @@ export default class OpenBook extends Component {
     
   }
 
-  openBrower() {
-    Linking.openURL(`${this.state.fullpage}`);
-  }
+  // openBrower() {
+  //   Linking.openURL(`${this.state.fullpage}`);
+  // }
 
   getnextUrl(url){
     console.log('url : ',url.url)
@@ -75,6 +75,7 @@ export default class OpenBook extends Component {
               source={{uri: `${this.state.fullpage}`}}
               javaScriptEnabled={true}
               domStorageEnabled={true}
+              javaScriptCanOpenWindowsAutomatically={true}
               setJavaScriptCanOpenWindowsAutomatically={true}
               thirdPartyCookiesEnabled={true}
               injectedJavaScript={INJECTED_JAVASCRIPT}
